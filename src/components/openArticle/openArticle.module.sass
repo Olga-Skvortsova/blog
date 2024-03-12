@@ -1,0 +1,136 @@
+.articleWrapper
+  width: 938px
+  padding-bottom: 50px
+  margin: 24px auto 0 auto
+.article
+  display: grid
+  grid-template-columns: 682px 141px
+  grid-auto-rows: 28px 20px 45px auto
+  column-gap: 85px
+  row-gap: 8px
+  grid-template-areas: "header profile" "tags profile" "text profile" "article article"
+  width: 938px
+  box-sizing: border-box
+  padding: 15px
+  background: #FFFFFF
+  box-shadow: 0px 4px 12px 0px #00000026
+  border-radius: 5px
+  &__header
+    display: flex
+    align-items: center
+    grid-area: header
+  &__title
+    margin-right: 13px
+    font-size: 20px
+    line-height: 28px
+    letter-spacing: 0em
+    text-align: left
+    color: #1890FF
+  &__likes
+    display: flex
+    align-items: center
+    justify-content: space-between
+    width: 34px
+    height: 22px
+    p
+      font-size: 12px
+      line-height: 22px
+      letter-spacing: 0px
+  &__likes:hover
+    cursor: pointer
+    p
+      font-weight: 500
+  &__tags
+    grid-area: tags
+    display: flex
+  &__tag
+    display: flex
+    align-items: center
+    justify-content: center
+    box-sizing: content-box
+    width: fit-content
+    padding: 0 6px 0 6px
+    height: 20px
+    border: 1px solid #00000080
+    font-size: 12px
+    line-height: 15px
+    letter-spacing: 0em
+    border-radius: 2px
+    margin-right: 5px
+  &__text
+    grid-area: text
+    font-size: 12px
+    line-height: 22px
+    letter-spacing: 0px
+    text-align: left
+  &__profile
+    grid-area: profile
+    display: grid
+    grid-template-columns: 90px 46px
+    grid-template-areas: "name avatar" "date avatar" "button button"
+    h6
+      grid-area: name
+      font-size: 18px
+      line-height: 28px
+      letter-spacing: 0em
+      text-align: left
+      overflow-wrap: break-word
+    p
+      grid-area: date
+      font-size: 12px
+      line-height: 22px
+      letter-spacing: 0px
+      text-align: left
+      color: #00000080
+  &__button
+    display: flex
+    grid-area: button
+    button
+      height: 31.1px
+      border-radius: 5px
+      background: transparent
+      font-size: 14px
+      font-weight: 400
+      line-height: 22px
+      letter-spacing: 0px
+      text-align: center
+    &_red
+      width: 78px
+      border: 1px solid #F5222D
+      color: #F5222D
+    &_red:hover
+      cursor: pointer
+      background: #F5222D
+      color: #FFFFFF
+    &_green
+      width: 65.23px
+      border: 1px solid #52C41A
+      color: #52C41A
+      margin-left: 12px
+    &_green:hover
+      cursor: pointer
+      background: #52C41A
+      color: #FFFFFF
+  &__modal
+    background: red
+    width: 100px
+    height: 100px
+  &__imgWrapper
+    grid-area: avatar
+    height: 46px
+    width: 46px
+    overflow: hidden
+    display: flex
+    justify-content: center
+    align-items: center
+    position: relative
+    border-radius: 50%
+    img
+      height: 46px
+      width: 46px
+  &__fullText
+    grid-area: article
+    font-size: 14px
+    line-height: 28px
+    letter-spacing: 0em
+    text-align: left

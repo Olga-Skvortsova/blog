@@ -1,0 +1,161 @@
+*
+  font-family: "Roboto"
+.article
+  display: flex
+  flex-direction: column
+  align-items: center
+  width: 938px
+  box-sizing: border-box
+  margin: 34px auto 0 auto
+  border-radius: 6px
+  background: #FFFFFF
+  border: 1px solid #D9D9D9
+  box-shadow: 0px 22px 106px 0px #00000012
+  &__h5
+    width: 311px
+    height: 27px
+    margin-top: 48px
+    margin-bottom: 21px
+    color: #262626
+    font-size: 20px
+    font-weight: 500
+    line-height: 28px
+    letter-spacing: 0em
+    text-align: center
+  form
+    display: flex
+    flex-direction: column
+    width: 874px
+  &__wrapper
+    width: 100%
+    margin-bottom: 21px
+    p
+      font-size: 14px
+      font-weight: 400
+      line-height: 22px
+      letter-spacing: 0em
+      text-align: left
+  &__input
+    width: 100%
+    height: 40px
+    border-radius: 4px
+    box-sizing: border-box
+    border: 1px solid #D9D9D9
+    padding: 8px 12px
+    font-size: 16px
+    font-weight: 300
+    line-height: 24px
+    letter-spacing: 0em
+    text-align: left
+    color: #BFBFBF
+  &__input:not(:placeholder-shown)
+    color: black
+  &__input:focus
+    color: black
+  &__textarea
+    width: 100%
+    height: 168px
+    height: 100px
+    box-sizing: border-box
+    border-radius: 4px
+    border: 1px solid #D9D9D9
+    padding: 8px 12px
+    font-size: 16px
+    font-weight: 300
+    line-height: 24px
+    letter-spacing: 0em
+    text-align: left
+    color: #BFBFBF
+  &__textarea:not(:placeholder-shown)
+    color: black
+  &__textarea:focus
+    color: black
+  &__tags
+    //display: flex
+    width: 100%
+    margin-bottom: 16px
+    p
+      font-size: 14px
+      font-weight: 400
+      line-height: 22px
+      letter-spacing: 0em
+      text-align: left
+  &__tag
+    display: flex
+    width: 437px
+    height: 40px
+    margin-bottom: 5px
+    input
+      width: 300px
+      height: 40px
+      box-sizing: border-box
+      border-radius: 4px
+      border: 1px solid #D9D9D9
+      padding: 8px 12px
+      font-size: 16px
+      font-weight: 300
+      line-height: 24px
+      letter-spacing: 0em
+      text-align: left
+      color: #BFBFBF
+    input:not(:placeholder-shown)
+      color: black
+    input:focus
+      color: black
+  &__tagButton
+    width: 118px
+    height: 40px
+    padding: 8px, 16px, 8px, 16px
+    border-radius: 4px
+    background-color: transparent
+    font-size: 16px
+    font-weight: 400
+    line-height: 24px
+    letter-spacing: 0em
+    text-align: center
+    &_red
+      margin-left: 17px
+      border: 1px solid #F5222D
+      color: #F5222D
+    &_red:hover
+      cursor: pointer
+      background-color: #F5222D
+      color: #FFFFFF
+    &_blue
+      position: absolute
+      margin-left: 454px
+      margin-top: -45px
+      border: 1px solid #1890FF
+      color: #1890FF
+    &_blue:hover
+      cursor: pointer
+      background-color: #1890FF
+      color: #FFFFFF
+  &__buttonSend
+    width: 319px
+    height: 40px
+    padding: 8px, 16px, 8px, 16px
+    margin-bottom: 52px
+    border-radius: 4px
+    border: none
+    background: #1890FF
+    font-size: 16px
+    font-weight: 400
+    line-height: 24px
+    letter-spacing: 0em
+    text-align: center
+    color: #FFFFFF
+  &__buttonSend:hover
+    cursor: pointer
+    background: #1380e7
+  &__mdsfn
+    background: red
+  &__error
+    color: #F5222D
+    font-size: 14px
+    font-weight: 400
+    line-height: 22px
+    letter-spacing: 0em
+    text-align: left
+  &__inputError
+    border: 1px solid #F5222D
