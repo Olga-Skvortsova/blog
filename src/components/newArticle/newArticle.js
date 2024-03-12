@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { message } from 'antd';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { createArticle, updateArticle } from '../../store/createArticleReducer';
 
@@ -14,6 +14,7 @@ export default function NewArticle() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.loginUserReducer);
   const { articles } = useSelector((state) => state.getArticleReducer);
@@ -53,13 +54,6 @@ export default function NewArticle() {
     messageApi.open({
       type: 'success',
       content: 'New article created',
-    });
-  };
-
-  const successUpdate = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Article updated successfully',
     });
   };
 
@@ -113,7 +107,7 @@ export default function NewArticle() {
   useEffect(() => {
     if (statusOfUpdateArticle === 'resolved') {
       reset();
-      successUpdate();
+      navigate('/');
     } else if (statusOfUpdateArticle === 'rejected') {
       errorOfUpdateArticle.payload.errors ? serverError() : notUrArticle();
     }

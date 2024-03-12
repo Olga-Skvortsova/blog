@@ -36,6 +36,13 @@ export default function ArticleInList(article) {
     });
   };
 
+  const notAuthorized = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'Unauthorized user cannot like',
+    });
+  };
+
   useEffect(() => {
     if (statusOfLikeArticle === 'resolved') {
       if (statusOfLikeArticle === 'resolved' && likedArticle && likedArticle.article.slug === article.slug) {
@@ -49,8 +56,12 @@ export default function ArticleInList(article) {
   }, [statusOfLikeArticle]);
 
   const likeArt = () => {
-    let slug = article.slug;
-    isLiked ? dispatch(dislikeArticle({ user, slug })) : dispatch(likeArticle({ user, slug }));
+    if (Object.keys(user).length > 0) {
+      let slug = article.slug;
+      isLiked ? dispatch(dislikeArticle({ user, slug })) : dispatch(likeArticle({ user, slug }));
+    } else {
+      notAuthorized();
+    }
   };
 
   const reduceLength = (text, symbols) => {

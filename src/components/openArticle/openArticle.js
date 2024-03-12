@@ -45,10 +45,10 @@ export default function OpenArticle() {
     });
   };
 
-  const notUrArticle = () => {
+  const notAuthorized = () => {
     messageApi.open({
       type: 'error',
-      content: 'That is not your article, you cannot delete it',
+      content: 'Unauthorized user cannot like',
     });
   };
 
@@ -58,7 +58,7 @@ export default function OpenArticle() {
       dispatch(clearErrorsAndStatusOfCreate());
       navigate('/');
     } else if (statusOfDeleteArticle === 'rejected') {
-      errorOfDeleteArticle.payload.errors ? serverError() : notUrArticle();
+      errorOfDeleteArticle.payload.errors ? serverError() : null;
     }
   }, [statusOfDeleteArticle]);
 
@@ -88,8 +88,12 @@ export default function OpenArticle() {
   };
 
   const likeArt = () => {
-    let slug = article.slug;
-    isLiked ? dispatch(dislikeArticle({ user, slug })) : dispatch(likeArticle({ user, slug }));
+    if (Object.keys(user).length > 0) {
+      let slug = article.slug;
+      isLiked ? dispatch(dislikeArticle({ user, slug })) : dispatch(likeArticle({ user, slug }));
+    } else {
+      notAuthorized();
+    }
   };
 
   const confirm = () => {
@@ -98,6 +102,8 @@ export default function OpenArticle() {
   const cancel = () => {
     message.error('The article has not been deleted');
   };
+  console.log(user.username);
+  console.log(article.author.username);
 
   return (
     <div className={styles.articleWrapper}>
@@ -128,10 +134,18 @@ export default function OpenArticle() {
               placement={'right'}
               cancelText="No"
             >
-              <button className={styles.article__button_red}> Delete </button>
+              {Object.keys(user).length > 0 ? (
+                user.username === article.author.username ? (
+                  <button className={styles.article__button_red}> Delete </button>
+                ) : null
+              ) : null}
             </Popconfirm>
             <NavLink className={styles.article__link} to={`/articles/${article.slug}/edit`}>
-              <button className={styles.article__button_green}>Edit</button>
+              {Object.keys(user).length > 0 ? (
+                user.username === article.author.username ? (
+                  <button className={styles.article__button_green}>Edit</button>
+                ) : null
+              ) : null}
             </NavLink>
           </div>
         </div>

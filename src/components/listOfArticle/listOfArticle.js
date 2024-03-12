@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -11,19 +12,20 @@ import ArticleInList from '../articleInList';
 import styles from './listOfArticle.module.sass';
 
 export default function ListOfArticle() {
-  const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page') || '1', 10);
 
+  const dispatch = useDispatch();
   const { articles, numberOfArticles, statusOfGetArticles, errorOfGetArticle } = useSelector(
     (state) => state.getArticleReducer
   );
   const { user } = useSelector((state) => state.loginUserReducer);
 
-  const [page, setPage] = React.useState(1);
   const [articlesListContent, setArticlesListContent] = useState(null);
 
   useEffect(() => {
     dispatch(getArticle({ page, user }));
-  }, []);
+  }, [page, user, dispatch]);
 
   useEffect(() => {
     if (articles) {
@@ -32,7 +34,7 @@ export default function ListOfArticle() {
   }, [articles]);
 
   const handleChange = (event, value) => {
-    setPage(value);
+    setSearchParams({ page: value.toString() });
     dispatch(getArticle({ page: value, user }));
   };
 
