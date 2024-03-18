@@ -2,18 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { message } from 'antd';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import like from '../../img/Vector.svg';
 import likefill from '../../img/filedvector.svg';
-import { likeArticle, dislikeArticle, clearErrorsAndStatusOfCreate } from '../../store/createArticleReducer';
+import { likeArticle, dislikeArticle } from '../../store/createArticleReducer';
 
 import styles from './articleInList.module.sass';
 export default function ArticleInList(article) {
-  const [likesCount, setLikesCount] = useState(article.favoritesCount);
-  const [isLiked, setIsLiked] = useState(article.favorited);
-  const { user } = useSelector((state) => state.loginUserReducer);
   const { likedArticle, statusOfLikeArticle, errorOfLikeArticle } = useSelector((state) => state.createArticleReducer);
+  const initialLikesCount =
+    likedArticle?.article?.slug === article.slug ? likedArticle.article.favoritesCount : article.favoritesCount;
+  const initialIsLiked =
+    likedArticle?.article?.slug === article.slug ? likedArticle.article.favorited : article.favorited;
+  const [likesCount, setLikesCount] = useState(initialLikesCount);
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const { user } = useSelector((state) => state.loginUserReducer);
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
   const tags = (tagList) => {
@@ -44,16 +48,13 @@ export default function ArticleInList(article) {
   };
 
   useEffect(() => {
-    if (statusOfLikeArticle === 'resolved') {
-      if (statusOfLikeArticle === 'resolved' && likedArticle && likedArticle.article.slug === article.slug) {
-        setLikesCount(likedArticle.article.favoritesCount);
-        setIsLiked(likedArticle.article.favorited);
-      }
-      dispatch(clearErrorsAndStatusOfCreate());
+    if (statusOfLikeArticle === 'resolved' && likedArticle?.article?.slug === article.slug) {
+      setLikesCount(likedArticle.article.favoritesCount);
+      setIsLiked(likedArticle.article.favorited);
     } else if (statusOfLikeArticle === 'rejected') {
       errorOfLikeArticle.payload.errors ? serverError() : null;
     }
-  }, [statusOfLikeArticle]);
+  }, [statusOfLikeArticle, likedArticle, article.slug, errorOfLikeArticle]);
 
   const likeArt = () => {
     if (Object.keys(user).length > 0) {

@@ -4,6 +4,8 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { message } from 'antd';
 import classNames from 'classnames';
 import { useParams, useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import { createArticle, updateArticle } from '../../store/createArticleReducer';
 
@@ -18,9 +20,8 @@ export default function NewArticle() {
 
   const { user } = useSelector((state) => state.loginUserReducer);
   const { articles } = useSelector((state) => state.getArticleReducer);
-  const { statusOfCreateArticle, errorOfCreateArticle, statusOfUpdateArticle, errorOfUpdateArticle } = useSelector(
-    (state) => state.createArticleReducer
-  );
+  const { articleToSlug, statusOfCreateArticle, errorOfCreateArticle, statusOfUpdateArticle, errorOfUpdateArticle } =
+    useSelector((state) => state.createArticleReducer);
   const { slug } = useParams();
 
   const {
@@ -33,15 +34,15 @@ export default function NewArticle() {
     control,
   } = useForm({
     mode: 'onBlur',
-    defaultValues: slug
-      ? articles.find((art) => art.slug === slug).tagList.length > 0
-        ? {
-            tags: articles
-              .find((art) => art.slug === slug)
-              .tagList.map((el) => {
+    defaultValues: editArticle
+      ? slug
+        ? editArticle.tagList.length > 0
+          ? {
+              tags: editArticle.tagList.map((el) => {
                 return { name: '', amount: 0 };
               }),
-          }
+            }
+          : { tags: [{ name: '', amount: 0 }] }
         : { tags: [{ name: '', amount: 0 }] }
       : { tags: [{ name: '', amount: 0 }] },
   });
@@ -87,7 +88,15 @@ export default function NewArticle() {
 
   useEffect(() => {
     if (slug) {
-      setEditArticle(articles.find((art) => art.slug === slug));
+      if (articleToSlug) {
+        if (articleToSlug.slug === slug) {
+          setEditArticle(articleToSlug);
+        } else {
+          setEditArticle(articles.find((art) => art.slug === slug));
+        }
+      } else {
+        setEditArticle(articles.find((art) => art.slug === slug));
+      }
     } else {
       setEditArticle('');
     }
@@ -96,7 +105,7 @@ export default function NewArticle() {
   useEffect(() => {
     if (statusOfCreateArticle === 'resolved') {
       reset();
-      successCreate();
+      navigate(`/articles/${articleToSlug.slug}`);
     } else if (statusOfCreateArticle === 'rejected') {
       if (errorOfCreateArticle.payload.errors.message === 'Not Found') {
         serverError();
@@ -107,7 +116,7 @@ export default function NewArticle() {
   useEffect(() => {
     if (statusOfUpdateArticle === 'resolved') {
       reset();
-      navigate('/');
+      navigate(`/articles/${articleToSlug.slug}`);
     } else if (statusOfUpdateArticle === 'rejected') {
       errorOfUpdateArticle.payload.errors ? serverError() : notUrArticle();
     }
@@ -121,7 +130,13 @@ export default function NewArticle() {
     }
   };
 
-  return (
+  return statusOfCreateArticle === 'loading' || statusOfUpdateArticle === 'loading' ? (
+    <div className={styles.loading}>
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    </div>
+  ) : (
     <div className={styles.article}>
       {contextHolder}
       <h5 className={styles.article__h5}>{slug ? 'Edit article' : 'Create new article'}</h5>

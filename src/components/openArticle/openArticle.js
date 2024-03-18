@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { message, Popconfirm } from 'antd';
 import Markdown from 'markdown-to-jsx';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import like from '../../img/Vector.svg';
 import likefill from '../../img/filedvector.svg';
@@ -19,8 +21,9 @@ import styles from './openArticle.module.sass';
 export default function OpenArticle() {
   const { articles } = useSelector((state) => state.getArticleReducer);
   const { user } = useSelector((state) => state.loginUserReducer);
-  const { likedArticle, statusOfDeleteArticle, errorOfDeleteArticle, statusOfLikeArticle, errorOfLikeArticle } =
-    useSelector((state) => state.createArticleReducer);
+  const { articleToSlug, likedArticle, statusOfDeleteArticle, errorOfDeleteArticle, statusOfLikeArticle } = useSelector(
+    (state) => state.createArticleReducer
+  );
   const [messageApi, contextHolder] = message.useMessage();
 
   const { slug } = useParams();
@@ -28,15 +31,27 @@ export default function OpenArticle() {
   const navigate = useNavigate();
 
   const [article, setArticle] = useState(
-    articles.filter((el) => {
-      if (el.slug === slug) {
-        return el;
-      }
-    })[0]
+    articleToSlug
+      ? articleToSlug.slug === slug
+        ? articleToSlug
+        : articles.filter((el) => {
+            if (el.slug === slug) {
+              return el;
+            }
+          })[0]
+      : articles.filter((el) => {
+          if (el.slug === slug) {
+            return el;
+          }
+        })[0]
   );
 
-  const [likesCount, setLikesCount] = useState(article.favoritesCount);
-  const [isLiked, setIsLiked] = useState(article.favorited);
+  const matchingArticle = useSelector((state) =>
+    state.getArticleReducer.articles.find((article) => article.slug === slug)
+  );
+
+  const [likesCount, setLikesCount] = useState(matchingArticle ? matchingArticle.favoritesCount : 0);
+  const [isLiked, setIsLiked] = useState(matchingArticle ? matchingArticle.favorited : false);
 
   const serverError = () => {
     messageApi.open({
@@ -63,16 +78,11 @@ export default function OpenArticle() {
   }, [statusOfDeleteArticle]);
 
   useEffect(() => {
-    if (statusOfLikeArticle === 'resolved') {
-      if (statusOfLikeArticle === 'resolved' && likedArticle && likedArticle.article.slug === article.slug) {
-        setLikesCount(likedArticle.article.favoritesCount);
-        setIsLiked(likedArticle.article.favorited);
-      }
-      dispatch(clearErrorsAndStatusOfCreate());
-    } else if (statusOfLikeArticle === 'rejected') {
-      errorOfLikeArticle.payload.errors ? serverError() : null;
+    if (statusOfLikeArticle === 'resolved' && likedArticle && likedArticle.article.slug === article.slug) {
+      setLikesCount(likedArticle.article.favoritesCount);
+      setIsLiked(likedArticle.article.favorited);
     }
-  }, [statusOfLikeArticle]);
+  }, [likedArticle, statusOfLikeArticle, article.slug]);
 
   const tags = (tagList) => {
     return tagList.map((tag) => {
@@ -96,16 +106,25 @@ export default function OpenArticle() {
     }
   };
 
+  const handleEdit = () => {
+    dispatch(clearErrorsAndStatusOfCreate());
+    navigate(`/articles/${article.slug}/edit`);
+  };
+
   const confirm = () => {
     dispatch(deleteArticle({ user, slug }));
   };
   const cancel = () => {
     message.error('The article has not been deleted');
   };
-  console.log(user.username);
-  console.log(article.author.username);
 
-  return (
+  return statusOfDeleteArticle === 'loading' ? (
+    <div className={styles.loading}>
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    </div>
+  ) : (
     <div className={styles.articleWrapper}>
       {contextHolder}
       <div className={styles.article}>
@@ -140,13 +159,13 @@ export default function OpenArticle() {
                 ) : null
               ) : null}
             </Popconfirm>
-            <NavLink className={styles.article__link} to={`/articles/${article.slug}/edit`}>
-              {Object.keys(user).length > 0 ? (
-                user.username === article.author.username ? (
-                  <button className={styles.article__button_green}>Edit</button>
-                ) : null
-              ) : null}
-            </NavLink>
+            {Object.keys(user).length > 0 ? (
+              user.username === article.author.username ? (
+                <button className={styles.article__button_green} onClick={handleEdit}>
+                  Edit
+                </button>
+              ) : null
+            ) : null}
           </div>
         </div>
         <div className={styles.article__fullText}>

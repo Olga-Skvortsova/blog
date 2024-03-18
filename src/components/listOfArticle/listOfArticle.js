@@ -25,7 +25,7 @@ export default function ListOfArticle() {
 
   useEffect(() => {
     dispatch(getArticle({ page, user }));
-  }, [page, user, dispatch]);
+  }, []);
 
   useEffect(() => {
     if (articles) {

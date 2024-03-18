@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import classNames from 'classnames';
 import { NavLink, useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import { enterUser } from '../../store/loginUserReducer';
 
@@ -30,7 +32,13 @@ export default function SignIn() {
     }
   }, [statusOfEnterUser]);
 
-  return (
+  return statusOfEnterUser === 'loading' ? (
+    <div className={styles.loading}>
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    </div>
+  ) : (
     <div className={styles.box}>
       <h5 className={styles.box__h5}>Sign In</h5>
       <form onSubmit={handleSubmit(onSubmit)}>

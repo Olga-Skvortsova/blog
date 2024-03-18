@@ -8,6 +8,8 @@ const initialState = {
 };
 
 export const getArticle = createAsyncThunk('articles/getArticle', async function ({ page, user }, { rejectWithValue }) {
+  let nam;
+  page === 0 ? (nam = 0) : (nam = page * 5 - 5);
   const head = {
     headers: {
       Authorization: `Token ${user.token}`,
@@ -15,7 +17,7 @@ export const getArticle = createAsyncThunk('articles/getArticle', async function
   };
   try {
     const responce = await fetch(
-      `https://blog.kata.academy/api/articles?limit=5&offset=${page * 2}`,
+      `https://blog.kata.academy/api/articles?limit=5&offset=${nam}`,
       Object.keys(user).length > 0 ? head : null
     );
     if (!responce.ok) {

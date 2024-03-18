@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import classNames from 'classnames';
 import { NavLink, useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import { loginUser } from '../../store/loginUserReducer';
 
@@ -157,5 +159,13 @@ export default function SignUp() {
     content = isOkay;
   }
 
-  return content;
+  return statusOfLoginUser === 'loading' ? (
+    <div className={styles.loading}>
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    </div>
+  ) : (
+    content
+  );
 }

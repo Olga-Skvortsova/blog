@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
+  articleToSlug: null,
   likedArticle: null,
   statusOfCreateArticle: null,
   errorOfCreateArticle: null,
@@ -177,6 +178,7 @@ const createArticleReducer = createSlice({
         state.errorOfCreateArticle = null;
       })
       .addCase(createArticle.fulfilled, (state, action) => {
+        state.articleToSlug = action.payload.article;
         state.statusOfCreateArticle = 'resolved';
         state.errorOfCreateArticle = null;
       })
@@ -190,6 +192,7 @@ const createArticleReducer = createSlice({
         state.errorOfUpdateArticle = null;
       })
       .addCase(updateArticle.fulfilled, (state, action) => {
+        state.articleToSlug = action.payload.article;
         state.statusOfUpdateArticle = 'resolved';
         state.errorOfUpdateArticle = null;
       })
